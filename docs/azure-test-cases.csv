@@ -1,0 +1,91 @@
+﻿Work Item Type,Title,Test Step,Step Action,Step Expected,Priority
+Test Case,CT01 - Cadastrar veterinário pela tela de registro,,,,1
+,,1,Abrir http://localhost:8082/registrar,"Tela ""Criar Conta"" exibida com os campos Nome, E-mail, Senha, CRMV, Telefone e Especialidade",
+,,2,Preencher Nome completo com @nome@,Campo preenchido,
+,,3,Preencher E-mail com @email@,Campo preenchido,
+,,4,Preencher Senha com @senha@,Campo preenchido (mascarado),
+,,5,Preencher CRMV com @crmv@,Campo preenchido,
+,,6,"Clicar em ""Cadastrar""","Redireciona para /login?sucesso e exibe ""Cadastro realizado com sucesso!""",
+Test Case,CT02 - Login com credenciais válidas,,,,1
+,,1,Abrir http://localhost:8082/login,"Tela ""Bem-vindo de volta"" exibida",
+,,2,Preencher E-mail com @email@ e Senha com @senha@,Campos preenchidos,
+,,3,"Clicar em ""Entrar""","Redireciona para /home com o título ""Bem-vindo ao ClyvoPet""",
+Test Case,CT03 - Login com credenciais inválidas exibe erro,,,,1
+,,1,Abrir http://localhost:8082/login,Tela de login exibida,
+,,2,Preencher E-mail com @email@ e Senha com @senha@,Campos preenchidos,
+,,3,"Clicar em ""Entrar""","Permanece em /login?error e exibe ""E-mail ou senha inválidos""; nenhuma sessão é criada",
+Test Case,CT04 - Página protegida sem login redireciona para o login,,,,2
+,,1,Abrir http://localhost:8082@rota@ diretamente na barra de endereço,Redireciona para /login; o conteúdo da rota não é exibido,
+Test Case,CT05 - Logout encerra a sessão,,,,2
+,,1,"Na home, clicar no botão de menu (hambúrguer)",Menu de navegação é aberto,
+,,2,"Clicar em ""Sair""","Redireciona para /login?logout com ""Você foi desconectado""",
+,,3,Abrir http://localhost:8082/web/animais,Redireciona para /login (sessão encerrada),
+Test Case,CT06 - Veterinário (não-admin) não acessa gestão de veterinários,,,,2
+,,1,Abrir o menu e verificar os itens,"Item ""Veterinários"" não é exibido",
+,,2,Abrir http://localhost:8082/web/veterinarios,Acesso negado (HTTP 403); a lista de veterinários não é exibida,
+Test Case,CT07 - Cadastrar animal com dados do tutor,,,,1
+,,1,Abrir http://localhost:8082/web/animais/novo,"Formulário ""Novo Animal"" exibido",
+,,2,"Preencher Nome=@nome@, Espécie=@especie@, Raça=@raca@, Idade=@idade@, Peso=@peso@ e Sexo=@sexo@",Campos preenchidos,
+,,3,"Preencher Nome do Tutor=@tutor@, Telefone=@telefone@ e E-mail do Tutor=@email_tutor@",Campos preenchidos,
+,,4,"Clicar em ""Salvar""","Redireciona para /web/animais; a lista contém uma linha com ID, @nome@, @especie@, @raca@ e @tutor@",
+Test Case,CT08 - Campos obrigatórios do animal bloqueiam o envio,,,,2
+,,1,Abrir http://localhost:8082/web/animais/novo,Formulário exibido,
+,,2,"Preencher todos os campos obrigatórios com os dados de Rex, deixando vazio apenas @campo_vazio@",Campo @campo_vazio@ vazio,
+,,3,"Clicar em ""Salvar""",Formulário não é enviado; o navegador destaca o campo @campo_vazio@; permanece em /web/animais/novo; nenhum animal é criado,
+Test Case,CT09 - Valores inválidos no cadastro de animal são rejeitados,,,,3
+,,1,Abrir http://localhost:8082/web/animais/novo e preencher os campos obrigatórios com os dados de Rex,Formulário preenchido,
+,,2,Preencher @campo@ com @valor@,Valor digitado,
+,,3,"Clicar em ""Salvar""",Formulário não é enviado; o navegador destaca @campo@ como inválido; nenhum animal é criado,
+Test Case,CT10 - Visualizar detalhes de um animal,,,,2
+,,1,Abrir http://localhost:8082/web/animais,Lista de animais exibida,
+,,2,Clicar no ícone de olho (Visualizar) da linha @nome@,"Abre /web/animais/{id} com espécie, raça, idade, peso, sexo e dados do tutor de Rex",
+Test Case,CT11 - Editar dados de um animal,,,,2
+,,1,"Na lista de animais, clicar no ícone de lápis (Editar) da linha @nome@","Formulário ""Editar Animal"" exibido com os dados atuais",
+,,2,"Alterar Peso (kg) para @peso_novo@ e clicar em ""Salvar""",Redireciona para /web/animais,
+,,3,Abrir os detalhes de @nome@,Peso exibido é @peso_novo@ kg,
+Test Case,CT12 - Desativar animal remove-o da lista,,,,2
+,,1,"Na lista, clicar no ícone de lixeira da linha @nome@","Diálogo ""Tem certeza que deseja desativar esse registro?""",
+,,2,"Clicar em ""Cancelar"" no diálogo",Animal continua na lista,
+,,3,"Clicar novamente na lixeira e confirmar com ""OK""",Redireciona para /web/animais e @nome@ não aparece mais na lista,
+Test Case,CT13 - Admin lista veterinários e perfis,,,,2
+,,1,Fazer login com a conta ADMIN,Home exibida,
+,,2,"Abrir o menu e clicar em ""Veterinários""","Lista com colunas ID, Nome, E-mail, CRMV, Telefone, Especialidade e Perfil",
+,,3,Verificar a coluna Perfil,Administrador aparece como ADMIN e os demais como VETERINARIO,
+Test Case,CT14 - Admin cadastra veterinário,,,,2
+,,1,Abrir http://localhost:8082/web/veterinarios/novo,Formulário de veterinário exibido (com campo Senha),
+,,2,"Preencher Nome=@nome@, E-mail=@email@, Senha=@senha@, CRMV=@crmv@, Telefone=@telefone@ e Especialidade=@especialidade@",Campos preenchidos,
+,,3,"Clicar em ""Salvar""",Redireciona para /web/veterinarios e @nome@ aparece na lista,
+Test Case,CT15 - Admin edita veterinário,,,,3
+,,1,"Na lista de veterinários, clicar em Editar na linha @nome@",Formulário exibido com dados atuais e sem campo Senha,
+,,2,Alterar Especialidade para @especialidade_nova@ e salvar,Lista exibe @especialidade_nova@ para @nome@,
+Test Case,CT16 - Admin exclui veterinário,,,,3
+,,1,Clicar em Excluir na linha @nome@,"Diálogo ""Tem certeza que deseja excluir este veterinário? As consultas vinculadas serão canceladas.""",
+,,2,"Confirmar com ""OK""","Mensagem ""Veterinário excluído com sucesso."" e @nome@ some da lista",
+Test Case,CT17 - Agendar consulta,,,,1
+,,1,Abrir http://localhost:8082/web/consultas/nova,"Formulário ""Nova Consulta"" exibido",
+,,2,Selecionar Animal=@animal@ e Veterinário=@veterinario@,Opções selecionadas,
+,,3,"Informar Data/Hora=@data_hora@, Status=@status@ e Motivo=@motivo@",Campos preenchidos,
+,,4,"Clicar em ""Salvar""","Redireciona para /web/consultas; a lista mostra @animal@, @veterinario@, a data/hora e o status @status@",
+Test Case,CT18 - Editar consulta (diagnóstico e prescrição),,,,2
+,,1,"Na lista de consultas, clicar em Editar na consulta de Rex","Formulário ""Editar Consulta"" exibido",
+,,2,Preencher Diagnóstico=@diagnostico@ e Prescrição=@prescricao@ e salvar,Redireciona para /web/consultas,
+,,3,Abrir os detalhes da consulta,Diagnóstico e prescrição exibem os valores informados,
+Test Case,CT19 - Finalizar consulta agendada,,,,1
+,,1,"Na lista, clicar em Finalizar (ícone de check) da consulta","Diálogo ""Finalizar consulta?""",
+,,2,"Confirmar com ""OK""",Status da consulta passa a REALIZADA,
+,,3,Verificar os botões da linha,"Botões Cancelar, Finalizar e Enviar Lembrete não são mais exibidos",
+Test Case,CT20 - Cancelar consulta agendada,,,,1
+,,1,"Na lista, clicar em Cancelar da consulta","Diálogo ""Cancelar consulta?""",
+,,2,"Confirmar com ""OK""",Status da consulta passa a CANCELADA; consulta permanece no histórico,
+Test Case,CT21 - Excluir veterinário cancela suas consultas agendadas,,,,2
+,,1,Excluir o veterinário @nome@ na lista de veterinários e confirmar,"Mensagem ""Veterinário excluído com sucesso. N consulta(s) vinculada(s) foram canceladas.""",
+,,2,Abrir a lista de consultas,"A consulta aparece com status CANCELADA e veterinário ""Veterinário excluído""",
+Test Case,CT22 - Listar lembretes (lista vazia),,,,3
+,,1,Abrir http://localhost:8082/web/lembretes,"Tela de lembretes exibida com colunas ID, Animal, Tutor, E-mail e Data Envio",
+,,2,Verificar o conteúdo,"Mensagem ""Nenhum lembrete cadastrado.""",
+Test Case,CT23 - Enviar lembrete de consulta ao tutor,,,,2
+,,1,"Na lista de consultas, clicar em Enviar Lembrete da consulta de Rex",Redireciona para os detalhes da consulta,
+,,2,Abrir http://localhost:8082/web/lembretes,Lembrete criado para @email_tutor@ com Data Envio preenchida,
+,,3,Verificar a caixa de entrada de @email_tutor@,"Chega e-mail ""Lembrete de Consulta - ClyvoPet"" com data, animal, veterinário e motivo",
+Test Case,CT24 - Lembrete não é criado para tutor sem e-mail,,,,3
+,,1,"Na lista de consultas, clicar em Enviar Lembrete dessa consulta",O sistema informa que o tutor não possui e-mail cadastrado e nenhum lembrete é enviado,
