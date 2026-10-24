@@ -263,7 +263,7 @@ ParamValues (Parameter values no Azure):
 |---|---|---|
 | 1 | Fazer login com a conta ADMIN | Home exibida |
 | 2 | Abrir o menu e clicar em "Veterinários" | Lista com colunas ID, Nome, E-mail, CRMV, Telefone, Especialidade e Perfil |
-| 3 | Verificar a coluna Perfil | Administrador aparece como ADMIN e os demais como VETERINARIO |
+| 3 | Verificar a coluna Perfil | Administrador aparece como ADMIN e os demais como VETERINÁRIO |
 
 **CT14 – Admin cadastra veterinário** · Prioridade 2
 
